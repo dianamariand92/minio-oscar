@@ -22,26 +22,68 @@
 				</v-parallax>
 			</v-col>
 		</v-row>
-		<v-row>
-			<v-card class="col-12 col-md-6">
-				<h1 class="text-center">Input Bucket</h1>
-				<v-select
-					:items="buckets"
-					label="Input Bucket"
-					single-line
-					@change="inputFilesBucket"
-				></v-select>
-			</v-card>
+		<v-row style="padding-right:40px; padding-left:40px;" >
+			<v-col class="col-12 col-md-6">
+				<v-card style="padding-right:40px; padding-left:40px;height:75vh;overflow-y: auto;" >
+					<h1 style="padding-top:20px;" class="text-center">Input Bucket</h1>
 
-			<v-card class="col-12 col-md-6">
-				<h1 class="text-center">Output Bucket</h1>
-				 <v-select
-					:items="buckets"
-					label="Output Bucket"
-					single-line
-					@change="outputFilesBucket"
-				></v-select>
-			</v-card>
+					<v-select 
+						:items="buckets"
+						label="Select ..."
+						single-line
+						@change="inputFilesBucket"
+					></v-select>
+
+					<v-col v-for="(n, i) in inputURL" :key="i">
+						<v-row style="justify-content: center;" >
+							<span >{{n.file_name}}</span>
+							<v-btn
+								icon
+								color="blue"
+								@click="download(n.url,n.file_name)"
+							>
+								<v-icon>fa fa-download</v-icon>
+							</v-btn>
+
+						</v-row>
+						<v-img 
+							style="margin-top: 15px;"
+							:src="n.url"
+							height="300"
+							contain
+							aspect-ratio="1"
+						></v-img>
+					</v-col>
+				</v-card>
+			</v-col>
+			<v-col class="col-12 col-md-6">
+				<v-card style="padding-right:40px; padding-left:40px;height:75vh;overflow-y: auto;"  >
+					<h1  style="padding-top:20px;" class="text-center">Output Bucket</h1>
+					<v-select
+						:items="buckets"
+						label="Select ..."
+						single-line
+						@change="outputFilesBucket"
+					></v-select>
+
+					<v-col v-for="(n, i) in outputURL" :key="i">
+						<span>{{n.file_name}}</span>
+						<v-btn
+							icon
+							color="blue"
+							@click="download(n.url,n.file_name)"
+						>
+							<v-icon>fa fa-download</v-icon>
+						</v-btn>
+						<v-img 
+							:src="n.url"
+							height="300"
+							contain
+							aspect-ratio="1"
+						></v-img>
+					</v-col>
+				</v-card>
+			</v-col>
 
 		</v-row>
 		</v-container>
@@ -71,6 +113,10 @@
 			destroyDropzone: false,
 		},
 		loading: false,
+		inputBucket: '',
+		outputBucket: '',
+		inputURL : [],
+		outputURL : [],
 	 
                        
     }),  
@@ -106,23 +152,88 @@
 
 		inputFilesBucket(item){
 			this.loading = true;
+			this.inputBucket = item;
 			var params = {
 				name: item,
 				prefix: ''
 			}
-			this.getBucketFilesCall(params,this.getBucketFilesCallBack)
+			this.getBucketFilesCall(params,this.getBucketInputFilesCallBack)
 		},
 
 		outputFilesBucket(item){
-			console.log(item);
+			this.loading = true;
+			this.outputBucket = item;
+			var params = {
+				name: item,
+				prefix: ''
+			}
+			this.getBucketFilesCall(params,this.getBucketOutputFilesCallBack)
 		},
 
 
-		getBucketFilesCallBack(response){
+		getBucketInputFilesCallBack(response){
 			console.log(response)
+			if(response.err == ''){
+				for (let i = 0; i < response.files.length; i++) {
+					var params = {
+						bucketName: this.inputBucket, 
+						fileName: response.files[i].name
+					}
+					this.previewFileCall(params,this.previewInputFileCallBack);
+					
+				}
+			}
 			this.loading = false;
 		},
 
+		previewInputFileCallBack(response){
+			console.log(response)
+			if(response.file_name != '' && response.url != ''){
+				this.inputURL.push(response);
+			}else{
+				console.log('error');
+			}
+		},
+
+		getBucketOutputFilesCallBack(response){
+			console.log(response)
+			if(response.err == ''){
+				for (let i = 0; i < response.files.length; i++) {
+					var params = {
+						bucketName: this.outputBucket, 
+						fileName: response.files[i].name
+					}
+					this.previewFileCall(params,this.previewOutputFileCallBack);
+					
+				}
+			}
+			this.loading = false;
+		},
+
+		previewOutputFileCallBack(response){
+			console.log(response)
+			if(response.file_name != '' && response.url != ''){
+				this.outputURL.push(response);
+			}else{
+				console.log('error');
+			}
+			console.log(this.outputURL)
+		},
+
+		download(url,file_name){
+			this.downloadFileCall(url,file_name, this.downloadFileCallBack)
+		},
+
+		downloadFileCallBack(response){
+			console.log(response)
+			var _this = this;
+			const url = window.URL.createObjectURL(new Blob([response.data.data]))
+			const link = document.createElement('a')
+			link.href = url
+			link.setAttribute('download', response.file) //or any other extension
+			document.body.appendChild(link)
+			link.click()
+		},
 	
 
 		

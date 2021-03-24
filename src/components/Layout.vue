@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       v-model="drawer"
       app
       clipped
@@ -32,7 +32,7 @@
           </v-list-item-action>          
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
 
     <v-app-bar
       app
@@ -40,7 +40,7 @@
       color="blue lighten-5"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title>Make predictions through AWS with SCAR</v-toolbar-title>
+      <v-toolbar-title>Get results of OSCAR</v-toolbar-title>
        <v-spacer></v-spacer>
        <v-icon color="red lighten-1">mdi-account-circle</v-icon>
                   {{user}}
@@ -58,8 +58,7 @@
                   <div class="headline">Application info</div>
                 </v-card-title>
                 <v-card-text>
-                  This application allows you to load an image to obtain the prediction 
-                  of it through a machine learning model available from Amazon Web Services.
+                  This application allows you to choose an input and output bucket to view the original file and its result.
                 </v-card-text>
               </v-card>
             </v-flex>
@@ -68,11 +67,11 @@
                 <v-card-title primary-title class="layout justify-center">
                   <div class="headline">Contact us</div>
                 </v-card-title>
-                <v-card-text>
+                <v-card-text style="padding:0px;">
                   Grupo de Grid y Computación de Altas Prestaciones (GRyCAP)
                 </v-card-text>
                 <v-list class="transparent">
-                  <v-list-item>
+                  <v-list-item  style="margin:0px;">
                     <v-list-item-action>
                       <v-icon class="blue--text text--lighten-2">mdi-phone</v-icon>
                     </v-list-item-action>

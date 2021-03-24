@@ -103,7 +103,11 @@ export default {
                 if (err){
                     callBackHandler(err)
                 }else{
-                    callBackHandler(presignedUrl)
+                    var output = {
+                        file_name : params.fileName,
+                        url : presignedUrl
+                    }
+                    callBackHandler(output)
                    
                 }
                
@@ -121,37 +125,48 @@ export default {
                 });
             });
         },
-        downloadFileCall(params,callBackHandler){   
-            var _this = this     
-            if (params.select == 1){
-                this.minioClient.presignedGetObject(params.bucketName, params.fileName[0], 1500, function(err, presignedUrl) {
-                    if (err){
-                        callBackHandler(err)
-                    }else{
-                        axios({url:presignedUrl,method:'GET',responseType: params.response_type})
-                        .then(response => {
-                            callBackHandler(response)
-                        })
+        downloadFileCall(url_file,file_name,callBackHandler){
+            axios({url:url_file,method:'GET',responseType: 'blob'})
+                .then(response => {
+                    var res = {
+                        file: file_name,
+                        data: response
                     }
+                    callBackHandler(res)
                 })
-            }else {
-                    let zip = new JSZip();
-                    let folder = zip.folder('collection');
-                    for (let i = 0; i < params.select; i++) {
-                        this.minioClient.presignedGetObject(params.bucketName, params.fileName[i], 30000, function(err, presignedUrl) {
-                             if (err){
-                                callBackHandler(err)
-                             }else{
-                                // Fetch the image and parse the response stream as a blob
-                                var name = params.fileName[i].substr(params.fileName[i].lastIndexOf('/') + 1);
-                                folder.file(name, _this.urlToPromise(presignedUrl), {binary:true});
-                            }
-                        })                                           
-                    }
-
-                    callBackHandler(folder)
-                }
         },
+
+        // downloadFileCall(params,callBackHandler){   
+        //     var _this = this     
+        //     if (params.select == 1){
+        //         this.minioClient.presignedGetObject(params.bucketName, params.fileName[0], 1500, function(err, presignedUrl) {
+        //             if (err){
+        //                 callBackHandler(err)
+        //             }else{
+        //                 axios({url:presignedUrl,method:'GET',responseType: params.response_type})
+        //                 .then(response => {
+        //                     callBackHandler(response)
+        //                 })
+        //             }
+        //         })
+        //     }else {
+        //             let zip = new JSZip();
+        //             let folder = zip.folder('collection');
+        //             for (let i = 0; i < params.select; i++) {
+        //                 this.minioClient.presignedGetObject(params.bucketName, params.fileName[i], 30000, function(err, presignedUrl) {
+        //                      if (err){
+        //                         callBackHandler(err)
+        //                      }else{
+        //                         // Fetch the image and parse the response stream as a blob
+        //                         var name = params.fileName[i].substr(params.fileName[i].lastIndexOf('/') + 1);
+        //                         folder.file(name, _this.urlToPromise(presignedUrl), {binary:true});
+        //                     }
+        //                 })                                           
+        //             }
+
+        //             callBackHandler(folder)
+        //         }
+        // },
         uploadFileCall(params, callBackHandler){
             this.minioClient.presignedPutObject(params.bucketName, params.file_name, 24*60*60, function(err, presignedUrl) {
                 if (err){

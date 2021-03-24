@@ -18,20 +18,29 @@ export default {
   },
   data (){
     return {
-      loggedIn: true
+      loggedIn: false
     }
   },
   created() { 
-   	console.log(this.loggedIn)
-  },
-  mounted() {
-    console.log(this.loggedIn)
-    console.log("here");
-		if (typeof localStorage.getItem("session") != "undefined") {
+    if (typeof localStorage.getItem("session") != "undefined") {
       var session = JSON.parse(localStorage.getItem("session"));
 			if ((session != null  && typeof session.user.access_key != "undefined" && typeof session.user.secret_key != "undefined"  && typeof session.user.endpoint != "undefined")) {
+        console.log(this.loggedIn)
         this.loggedIn = true;
-				//console.log(session.user.username);
+				console.log(session.user);
+				// $(".users-dropdown").text(session.user.username);
+			}        
+    }else {
+      this.loggedIn = false
+    }
+    },
+  mounted() {
+    if (typeof localStorage.getItem("session") != "undefined") {
+      var session = JSON.parse(localStorage.getItem("session"));
+			if ((session != null  && typeof session.user.access_key != "undefined" && typeof session.user.secret_key != "undefined"  && typeof session.user.endpoint != "undefined")) {
+        console.log(this.loggedIn)
+        this.loggedIn = true;
+				console.log(session.user);
 				// $(".users-dropdown").text(session.user.username);
 			}        
     }else {

@@ -8,6 +8,16 @@ import Settings from '@/components/Settings.vue'
 Vue.use(Router)
 
 function requireAuth (to, from, next) {
+    var session = JSON.parse(localStorage.getItem("session"));
+    if ((session != null  && typeof session.user.access_key != "undefined" && typeof session.user.secret_key != "undefined"  && typeof session.user.endpoint != "undefined")) {
+      console.log('here here');
+      next();
+    }else{
+      next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        })
+    }      
     // var id_token = JSON.parse(localStorage.getItem("token_id"));
     // if (id_token != null){
     //   next()
@@ -33,21 +43,15 @@ function requireAuth (to, from, next) {
     base: __dirname,
     routes: [
       { path: '/', component: Dashboard, beforeEnter: requireAuth  },
-      // { path: '/dashboard', component: Dashboard, beforeEnter: requireAuth },
-      { path: '/dashboard', component: Dashboard },
+      { path: '/dashboard', component: Dashboard, beforeEnter: requireAuth },
+      // { path: '/dashboard', component: Dashboard },
       {path : '/settings', component: Settings, beforeEnter: requireAuth },      
       { path: '/login', component: Login},
             
       { path: '/logout',
         beforeEnter (to, from, next) {
-          var id_token = JSON.parse(localStorage.getItem("token_id"));
-          if (id_token == null){
-            cognitoAuth.logout();         
-          }
-          cognitoAuth.onChange(false)
-          next('/login')
-          localStorage.removeItem('session');
           localStorage.clear()
+          next('/login')
         }
       }
     ],    
