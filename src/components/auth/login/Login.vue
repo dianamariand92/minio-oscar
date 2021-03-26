@@ -90,8 +90,9 @@ export default {
     if (this.model.access_key != "" && this.model.secret_key != "" && this.model.endpoint != ""){
           this.loading = true;		         
           localStorage.setItem("session",JSON.stringify({ user: { access_key: this.model.access_key, secret_key: this.model.secret_key, endpoint: this.model.endpoint } }));
-          // this.$router.push("/dashboard");
-          this.$router.replace(this.$route.query.redirect || "/dashboard");
+          this.$router.push("/dashboard");
+          location.reload();
+          // this.$router.replace(this.$route.query.redirect || "/dashboard");
     }
     }
   }

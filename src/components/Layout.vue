@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <v-navigation-drawer
+    <v-navigation-drawer
       v-model="drawer"
       app
       clipped
@@ -32,18 +32,22 @@
           </v-list-item-action>          
         </v-list-item>
       </v-list>
-    </v-navigation-drawer> -->
+    </v-navigation-drawer>
 
     <v-app-bar
       app
       clipped-left
-      color="blue lighten-5"
+      color="#404E67"
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title>Get results of OSCAR</v-toolbar-title>
+      <v-app-bar-nav-icon color="white" @click.stop="drawer = !drawer" />
+      <v-toolbar-title style="color:white;">Access to storage providers</v-toolbar-title>
        <v-spacer></v-spacer>
-       <v-icon color="red lighten-1">mdi-account-circle</v-icon>
-                  {{user}}
+       <!-- <v-icon color="white">mdi-account-circle</v-icon>
+                  {{user}} -->
+         <v-btn color="white" style="padding-rigth:5px;" text @click.native="logout()">
+              Log Out
+              <v-icon color="white">logout</v-icon>
+            </v-btn>  
     </v-app-bar>
     <v-content>      
       <router-view></router-view>
@@ -102,11 +106,11 @@
         </v-container>
       </section>
 
-    <v-footer app color="blue darken-2">
+    <v-footer app color="#404E67">
         <v-layout row wrap align-center>
-          <v-flex xs12>
+          <v-flex style="padding:10px 0 10px 0;" xs12>
             <div class="white--text ml-4">
-              <h5>© 2020, <a style="color:#ff9966;" href="https://www.grycap.upv.es">GRyCAP-I3M-UPV</a>, Universitat Politècnica de Valéncia, Spain.</h5>               </div>
+              <h5>© 2021, <a style="color:#ff9966;" href="https://www.grycap.upv.es">GRyCAP-I3M-UPV</a>, Universitat Politècnica de Valéncia, Spain.</h5>               </div>
           </v-flex>
         </v-layout>
       </v-footer>

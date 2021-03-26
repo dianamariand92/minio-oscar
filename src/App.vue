@@ -35,6 +35,7 @@ export default {
     }
     },
   mounted() {
+    console.log(localStorage.getItem("session"));
     if (typeof localStorage.getItem("session") != "undefined") {
       var session = JSON.parse(localStorage.getItem("session"));
 			if ((session != null  && typeof session.user.access_key != "undefined" && typeof session.user.secret_key != "undefined"  && typeof session.user.endpoint != "undefined")) {

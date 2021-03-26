@@ -10,7 +10,6 @@ Vue.use(Router)
 function requireAuth (to, from, next) {
     var session = JSON.parse(localStorage.getItem("session"));
     if ((session != null  && typeof session.user.access_key != "undefined" && typeof session.user.secret_key != "undefined"  && typeof session.user.endpoint != "undefined")) {
-      console.log('here here');
       next();
     }else{
       next({
